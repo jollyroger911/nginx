@@ -4,10 +4,7 @@ trigger :
     include:
       - master
 
-pool:
-   name: myPool
-   demands:
-    - agent.name -equals myAgent
+pool: myPool
 
 variables:
   ImageName: 'ngx/ado:$(Build.BuildId)'
