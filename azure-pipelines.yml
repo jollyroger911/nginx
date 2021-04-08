@@ -6,11 +6,6 @@ trigger:
 - master
 
 resources:
-- task: Docker@2
-  inputs:
-    repository: 'https://hub.docker.com/repository/docker/jollyroger911/nginx'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
 - repo: self
 
 variables:
