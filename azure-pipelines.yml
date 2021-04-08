@@ -20,7 +20,7 @@ stages:
       displayName: 'Build the Docker image'
       inputs:
         containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
+        dockerRegistryEndpoint: 'DH'
         command: 'Build an image'
         dockerFile: '**/Dockerfile'
         imageName: '$(ImageName)'
