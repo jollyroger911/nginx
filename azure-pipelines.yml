@@ -16,8 +16,12 @@ stages:
   - job: DockerImage
     displayName: Build and push Docker image
     steps:
-    - script: cp ~/dockefiles/nginxConfig/privkey.pem ./
+    - script: cp ~/dockefiles/nginxConfig/b02/privkey.pem ./
       displayName: 'Copy private key'    
+    - script: cp ~/dockefiles/nginxConfig/b02/fullchain.pem ./
+      displayName: 'Copy fullchain'          
+    - script: cp ~/dockefiles/nginxConfig/b02/index.html ./
+      displayName: 'Copy index.html'    
     - task: Docker@1
       displayName: 'Build the Docker image'
       inputs:
