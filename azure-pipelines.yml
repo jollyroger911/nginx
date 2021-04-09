@@ -58,7 +58,7 @@ stages:
      - task: Docker@2
        displayName: DockerHub login
        inputs:
-         command: login
+         command: 'login'
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'DH'
      - script: docker run -d -p 8080:80 -p 8443:443 --name ngnx ngx/ado
