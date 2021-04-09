@@ -55,7 +55,7 @@ stages:
   - job: DockerContainer_Run
     displayName: Run container
     steps:
-     - task: Docker@2
+     - task: Docker@1
        displayName: DockerHub login
        inputs:
          containerregistrytype: 'Container Registry'
