@@ -60,6 +60,6 @@ stages:
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'DH'
-         command: 'login'
+         command: login
      - script: docker run -d -p 8080:80 -p 8443:443 --name ngnx ngx/ado
        displayName: 'Run a docker conatiner'
