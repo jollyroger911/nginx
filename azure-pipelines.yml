@@ -46,7 +46,7 @@ stages:
         containerregistrytype: 'Container Registry'
         repository: jollyroger911/nginx
         dockerRegistryEndpoint: 'DH'
-        command: 'Push an image'
+        command: push
         imageName: '$(ImageName)'
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
