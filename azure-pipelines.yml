@@ -44,7 +44,6 @@ stages:
       displayName: 'Push the Docker image to Dockerhub'
       inputs:
         containerregistrytype: 'Container Registry'
-        repository: jollyroger911/nginx
         dockerRegistryEndpoint: 'DH'
         command: push
         imageName: '$(ImageName)'
