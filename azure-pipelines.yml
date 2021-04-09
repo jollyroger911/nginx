@@ -55,10 +55,10 @@ stages:
   - job: DockerContainer_Run
     displayName: Run container
     steps:
-     - task: Docker@2
+     - task: Docker@3
        displayName: DockerHub login
        inputs:
-         command: login -U jollyroger911 -P M5e60v10@
+         command: login
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'DH'
      - script: docker run -d -p 8080:80 -p 8443:443 --name ngnx ngx/ado
