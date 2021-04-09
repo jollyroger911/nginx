@@ -40,11 +40,11 @@ stages:
   - job: DockerImage_Push
     displayName: Push Docker image
     steps:
-    - task: Docker@1
+    - task: Docker@2
       displayName: 'Push the Docker image to Dockerhub'
       inputs:
         containerregistrytype: 'Container Registry'
-        repository: 'jollyroger911/nginx'
+        repository: jollyroger911/nginx
         dockerRegistryEndpoint: 'DH'
         command: 'Push an image'
         imageName: '$(ImageName)'
