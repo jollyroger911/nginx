@@ -64,16 +64,20 @@ stages:
      - script: docker run -d -p 8080:80 -p 8443:443 --name ngnx ngx/ado
        displayName: 'Run a docker conatiner'
 
-
-steps:
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure subscription 1(44c9616e-5405-4758-9778-d3329a53e70b)'
-    appType: 'webAppContainer'
-    WebAppName: 'applicationsuka'
-    deployToSlotOrASE: true
-    ResourceGroupName: 'anton-resources'
-    SlotName: 'production'
-    DockerNamespace: 'ngx'
-    DockerRepository: 'ngx/ado'
+- stage: 'Deploy'
+  displayName: 'Deploy the web application'
+  jobs:
+  - job: Deploy
+    displayName: Deploy container
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure subscription 1(44c9616e-5405-4758-9778-d3329a53e70b)'
+        appType: 'webAppContainer'
+        WebAppName: 'applicationsuka'
+        deployToSlotOrASE: true
+        ResourceGroupName: 'anton-resources'
+        SlotName: 'production'
+        DockerNamespace: 'ngx'
+        DockerRepository: 'ngx/ado'
