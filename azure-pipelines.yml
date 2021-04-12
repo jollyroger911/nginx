@@ -69,16 +69,16 @@ stages:
   dependsOn: Build
   jobs:
   - deployment: Deploy
-    pool:
-      vmImage: 'ubuntu-18.04'
-    environment: dev
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            artifact: drop
-          - task: AzureWebApp@1
-            displayName: 'Azure App Service Deploy: website'
-            inputs:
-              appName: '$(WebAppName)'
+    pool: myPool
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure subscription 1(44c9616e-5405-4758-9778-d3329a53e70b)'
+        appType: 'webAppContainer'
+        WebAppName: 'applicationsuka'
+        deployToSlotOrASE: true
+        ResourceGroupName: 'anton-resources'
+        SlotName: 'production'
+        DockerNamespace: 'ngx'
+        DockerRepository: 'ngx/ado'
