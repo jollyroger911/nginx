@@ -64,12 +64,7 @@ stages:
      - script: docker run -d -p 8080:80 -p 8443:443 --name ngnx ngx/ado
        displayName: 'Run a docker conatiner'
 
-- stage: 'Deploy'
-  displayName: 'Deploy the web application'
-  dependsOn: Build
-  jobs:
-  - deployment: Deploy
-    displayName: Deploy container
+
     steps:
     - task: AzureRmWebAppDeployment@4
       inputs:
