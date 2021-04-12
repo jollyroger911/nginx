@@ -73,7 +73,7 @@ stages:
       vmImage: 'ubuntu-18.04'
     environment: dev
     variables:
-    - group: anton-resource
+    - group: anton-resources
     strategy:
       runOnce:
         deploy:
