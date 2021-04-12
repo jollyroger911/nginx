@@ -82,4 +82,3 @@ stages:
             displayName: 'Azure App Service Deploy: website'
             inputs:
               appName: '$(WebAppName)'
-              package: '$(buildConfiguration)/**/*.zip'
