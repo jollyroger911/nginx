@@ -69,7 +69,6 @@ stages:
   dependsOn: Build
   jobs:
   - deployment: Deploy
-    pool: myPool
     steps:
     - task: AzureRmWebAppDeployment@4
       inputs:
