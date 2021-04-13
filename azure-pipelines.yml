@@ -81,3 +81,15 @@ stages:
         SlotName: 'production'
         DockerNamespace: 'ngx'
         DockerRepository: 'ngx/ado'
+        ScriptType: 'Inline Script'
+    InlineScript: |
+     #!/bin/sh
+     
+     response=$(curl -sb -H "Accept: application/json" "https://www.anton.devmarc.swissre.com")
+     echo $response
+     if [ "$response" = "Hi, I am done. All works!!!!" ]; then
+     	echo $response 
+     else
+     	echo Bad response
+     	exit 1
+     fi
