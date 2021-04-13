@@ -44,9 +44,9 @@ stages:
       displayName: 'Push the Docker image to Dockerhub'
       inputs:
         containerregistrytype: 'Container Registry'
-        repository: 'nginx'
         dockerRegistryEndpoint: 'DH'
-        command: push
+        repository: 'nginx'
+        command: 'push'
         imageName: 'ngx/ado'
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
