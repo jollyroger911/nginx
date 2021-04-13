@@ -29,7 +29,7 @@ stages:
         dockerRegistryEndpoint: 'DH'
         command: 'Build an image'
         dockerFile: '**/Dockerfile'
-        imageName: 'ngx/ado'
+        imageName: '$(ImageName)'
         includeLatestTag: true
         useDefaultContext: false
         buildContext: '.'
@@ -45,9 +45,9 @@ stages:
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'DH'
-        repository: 'ngx/ado:latest'
+        repository: '$(ImageName)'
         command: push
-        imageName: 'ngx/ado:latest'
+        imageName: '$(ImageName)'
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 - stage: Run
