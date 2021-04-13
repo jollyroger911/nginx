@@ -7,7 +7,7 @@ trigger :
 pool: myPool
 
 variables:
-  ImageName: 'ngx/ado:$(Build.BuildId)'
+  ImageName: 'ngx/ado'
 
 stages:
 - stage: Build
