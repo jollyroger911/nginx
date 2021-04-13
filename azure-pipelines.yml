@@ -7,7 +7,7 @@ trigger :
 pool: myPool
 
 variables:
-  ImageName: 'ngx/ado:$(Build.BuildId)'
+  ImageName: 'nginx:$(Build.BuildId)'
 
 stages:
 - stage: Build
@@ -29,7 +29,7 @@ stages:
         dockerRegistryEndpoint: 'DH'
         command: 'Build an image'
         dockerFile: '**/Dockerfile'
-        imageName: 'ngx/ado'
+        imageName: 'nginx'
         includeLatestTag: true
         useDefaultContext: false
         buildContext: '.'
@@ -47,7 +47,7 @@ stages:
         dockerRegistryEndpoint: 'DH'
         repository: 'nginx'
         command: push
-        imageName: 'ngx/ado'
+        imageName: 'nginx'
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 - stage: Run
