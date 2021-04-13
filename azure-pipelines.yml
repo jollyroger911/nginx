@@ -46,7 +46,7 @@ stages:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'DH'
         repository: 'nginx'
-        command: 'push'
+        command: push
         imageName: 'ngx/ado'
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
