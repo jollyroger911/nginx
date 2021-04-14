@@ -46,7 +46,7 @@ stages:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'DH'
         command: push
-        repository: '$(imageRepository)'
+        repository: '$(Build.Repository)'
         imageName: '$(ImageName)'
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
