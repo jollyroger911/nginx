@@ -49,17 +49,4 @@ stages:
         imageName: '$(ImageName)'
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
-- stage: Run
-  displayName: Run image 
-  jobs:  
-  - job: DockerContainer_Run
-    displayName: Run container
-    steps:
-     - task: Docker@1
-       displayName: DockerHub login
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'DH'
-         command: login
-     - script: docker run -d -p 8080:80 -p 8443:443 --name ngnx ngx/ado
-       displayName: 'Run a docker conatiner'
+
