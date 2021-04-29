@@ -1,66 +1,24 @@
-name : CustomerApi-CI
-trigger:
-  branches:
-    include:
-      - master
-  paths:
-    include:
-      - CustomerApi/*
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-variables:  
+variables:
   AzureSubscription: 'AZC' # Name of the Service Connection
-  ApiName: 'customerapi'
-  ArtifactName: 'CustomerApi'
-  BuildId: $(Build.BuildId)
-  BuildNumber: $(GitVersion.NuGetVersionV2)
-  ClusterResourceGroup: MicroserviceDemo  
-  ChartPackage: '$(Build.ArtifactStagingDirectory)/$(ApiName)-$(BuildNumber).tgz'
-  ChartPath: '$(ArtifactName)/$(ArtifactName)/charts/$(ApiName)'
-  ConnectionString: "Server=tcp:$(SQLServerName),1433;Initial Catalog=$(DatabaseName);Persist Security Info=False;User ID=$(DbUser);Password=$(DbPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-  DatabaseName: Customer
-  HelmVersion: 3.5.0  
-  Repository: 'wolfgangofner/$(ApiName)' # '<YourACRName>.azurecr.io/<YourRepositoryName>' # replace with your repository
+  ApiName: 'ngx'
+  ClusterResourceGroup: ks06group  
+  ChartPackage: '$(Build.ArtifactStagingDirectory)/$(ApiName)-$(Build.BuildNumber).tgz'  
+  ChartPath: 'CustomerApi/CustomerApi/charts/$(ApiName)'
+  HelmVersion: 3.5.0
+  ImageName: 'jollyroger911/$(ApiName):$(Build.BuildNumber)'
   K8sNamespace: '$(ApiName)-test'
-  KubernetesCluster: 'microservice-aks'
-  ReleaseValuesFile: '$(ArtifactName)/$(ArtifactName)/values.release.yaml'
-  SQLServerName: wolfgangmicroservicedemoserver.database.windows.net # replace with your server url
+  KubernetesCluster: 'ks06AKS'
 
-resources:
-  containers:
-  - container: nginx
-    image: jollyroger911/ngx:153
+- task: HelmInstaller@0
+  inputs:
+    helmVersion: '2.14.1'
+    installKubectl: true
 
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:  
-  - job: Build
-    displayName: Build and push Docker image
-    steps: 
-    - template: templates/BuildVersioning.yml
-    - template: templates/DockerBuildAndPush.yml
-      parameters:
-          buildId: $(BuildId)
-          patMicroserviceDemoNugetsFeed: $(PatMicroserviceDemoNugetsFeed)
-          containerRegistry: 'DH' # MicroserviceDemoRegistry # replace with your Service Connection name
-          repository: $(Repository) 
-          tag: $(BuildNumber)
-          artifactName: $(ArtifactName)
-    - template: templates/HelmInstall.yml
-      parameters: 
-          helmVersion: $(HelmVersion)
-          releaseValuesFile: $(ReleaseValuesFile)
-    - template: templates/HelmDeploy.yml
-      parameters:          
-          apiName: $(ApiName)
-          azureSubscription: $(AzureSubscription)
-          buildNumber: $(BuildNumber)
-          clusterResourceGroup: $(ClusterResourceGroup)
-          chartPackage: $(ChartPackage)
-          chartPath: $(ChartPath)
-          k8sNamespace: $(K8sNamespace)
-          kubernetesCluster: $(KubernetesCluster)        
-          releaseValuesFile: $(ReleaseValuesFile)
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'AZC'
+    azureResourceGroup: 'ks06group'
+    kubernetesCluster: 'ks06AKS'
+    namespace: 'ks06'
+    command: 'ls'
