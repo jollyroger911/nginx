@@ -12,10 +12,10 @@ variables:
 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '128a758b-249b-4832-a07a-4252dd1a8a0d'
-  imageRepository: 'jollyroger/ngx'
+  imageRepository: 'jollyroger911/ngx'
   containerRegistry: 'acrks06.azurecr.io'
   dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildId)'
+  tag: '153'
   imagePullSecret: 'acrks067633-auth'
 
   # Agent VM image name
