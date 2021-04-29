@@ -16,12 +16,16 @@ stages:
   - job: DockerImage
     displayName: Build and push Docker image
     steps:
-    - script: cp ~/dockefiles/nginxConfig/b02/privkey.pem ./
+    - script: cp ~/ks07/privkey.pem ./
       displayName: 'Copy private key'    
-    - script: cp ~/dockefiles/nginxConfig/b02/fullchain.pem ./
+    - script: cp ~/ks07/fullchain.pem ./
       displayName: 'Copy fullchain'          
-    - script: cp ~/dockefiles/nginxConfig/b02/index.html ./
+    - script: cp ~/ks07/nginx/index.html ./
       displayName: 'Copy index.html'    
+    - script: cp ~/ks07/nginx/kubernetes.png ./
+      displayName: 'Copy kubernetes'          
+    - script: cp ~/ks07/nginx/ilon.jpg ./
+      displayName: 'Copy Ilon'    
 
     - task: Docker@1
       displayName: 'Build the Docker image'
