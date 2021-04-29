@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: jollyrogerngx 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jollyrogerngx
+  template:
+    metadata:
+      labels:
+        app: jollyrogerngx 
+    spec:
+      containers:
+        - name: jollyrogerngx 
+          image: acrks06.azurecr.io/jollyrogerngx
+          ports:
+          - containerPort: 443
