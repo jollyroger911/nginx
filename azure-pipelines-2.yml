@@ -1,79 +1,66 @@
-# Deploy to Azure Kubernetes Service
-# Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
+name : CustomerApi-CI
 trigger:
-- master
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - CustomerApi/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:  
+  AzureSubscription: 'AZC' # Name of the Service Connection
+  ApiName: 'customerapi'
+  ArtifactName: 'CustomerApi'
+  BuildId: $(Build.BuildId)
+  BuildNumber: $(GitVersion.NuGetVersionV2)
+  ClusterResourceGroup: MicroserviceDemo  
+  ChartPackage: '$(Build.ArtifactStagingDirectory)/$(ApiName)-$(BuildNumber).tgz'
+  ChartPath: '$(ArtifactName)/$(ArtifactName)/charts/$(ApiName)'
+  ConnectionString: "Server=tcp:$(SQLServerName),1433;Initial Catalog=$(DatabaseName);Persist Security Info=False;User ID=$(DbUser);Password=$(DbPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  DatabaseName: Customer
+  HelmVersion: 3.5.0  
+  Repository: 'wolfgangofner/$(ApiName)' # '<YourACRName>.azurecr.io/<YourRepositoryName>' # replace with your repository
+  K8sNamespace: '$(ApiName)-test'
+  KubernetesCluster: 'microservice-aks'
+  ReleaseValuesFile: '$(ArtifactName)/$(ArtifactName)/values.release.yaml'
+  SQLServerName: wolfgangmicroservicedemoserver.database.windows.net # replace with your server url
 
 resources:
-- repo: self
-
-variables:
-
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '128a758b-249b-4832-a07a-4252dd1a8a0d'
-  imageRepository: 'jollyroger911/ngx'
-  containerRegistry: 'acrks06.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
-  tag: '153'
-  imagePullSecret: 'acrks067633-auth'
-
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
-
+  containers:
+  - container: nginx
+    image: jollyroger911/ngx:153
 
 stages:
 - stage: Build
-  displayName: Build stage
-  jobs:
+  displayName: Build image
+  jobs:  
   - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
-
-    - upload: manifests
-      artifact: manifests
-
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
-
-  jobs:
-  - deployment: Deploy
-    displayName: Deploy
-    pool:
-      vmImage: $(vmImageName)
-    environment: 'jollyroger911nginx.ks06'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: KubernetesManifest@0
-            displayName: Create imagePullSecret
-            inputs:
-              action: createSecret
-              secretName: $(imagePullSecret)
-              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
-
-          - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
-            inputs:
-              action: deploy
-              manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
-              imagePullSecrets: |
-                $(imagePullSecret)
-              containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
-
+    displayName: Build and push Docker image
+    steps: 
+    - template: templates/BuildVersioning.yml
+    - template: templates/DockerBuildAndPush.yml
+      parameters:
+          buildId: $(BuildId)
+          patMicroserviceDemoNugetsFeed: $(PatMicroserviceDemoNugetsFeed)
+          containerRegistry: 'DH' # MicroserviceDemoRegistry # replace with your Service Connection name
+          repository: $(Repository) 
+          tag: $(BuildNumber)
+          artifactName: $(ArtifactName)
+    - template: templates/HelmInstall.yml
+      parameters: 
+          helmVersion: $(HelmVersion)
+          releaseValuesFile: $(ReleaseValuesFile)
+    - template: templates/HelmDeploy.yml
+      parameters:          
+          apiName: $(ApiName)
+          azureSubscription: $(AzureSubscription)
+          buildNumber: $(BuildNumber)
+          clusterResourceGroup: $(ClusterResourceGroup)
+          chartPackage: $(ChartPackage)
+          chartPath: $(ChartPath)
+          k8sNamespace: $(K8sNamespace)
+          kubernetesCluster: $(KubernetesCluster)        
+          releaseValuesFile: $(ReleaseValuesFile)
