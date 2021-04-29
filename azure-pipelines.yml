@@ -55,16 +55,11 @@ stages:
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 
-    - task: HelmInstaller@0
+    - task: CmdLine@2
       inputs:
-        helmVersion: '2.14.1'
-        installKubectl: true
-        
-    - task: HelmDeploy@0
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscription: 'AZC'
-        azureResourceGroup: 'ks06group'
-        kubernetesCluster: 'ks06AKS'
-        namespace: 'ks06'
-        command: 'ls'
+        script: |
+          helmVersion=helm-v3.0.0-rc.3-linux-amd64.tar.gz
+          
+          wget https://get.helm.sh/$helmVersion
+          tar xvzf $helmVersion
+          sudo mv linux-amd64/helm /usr/bin/helm
