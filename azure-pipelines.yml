@@ -33,7 +33,7 @@ stages:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'DH'
         command: 'Build an image'
-        dockerFile: '**/Dockerfile'
+        dockerFile: '**/nginx/Dockerfile'
         imageName: '$(ImageName)'
         includeLatestTag: true
         useDefaultContext: false
