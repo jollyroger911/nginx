@@ -63,3 +63,12 @@ stages:
           wget https://get.helm.sh/$helmVersion
           tar xvzf $helmVersion
           sudo mv linux-amd64/helm /usr/bin/helm
+
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'AZC'
+        azureResourceGroup: 'ks06group'
+        kubernetesCluster: 'ks06AKS'
+        namespace: 'ks06'
+        command: 'ls'
